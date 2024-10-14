@@ -1,16 +1,16 @@
 steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'europe-docker.pkg.dev/$PROJECT_ID/eu.gcr.io/stage/crm-backend:$SHORT_SHA', '.' ]
+    args: [ 'build', '-t', 'europe-docker.pkg.dev/$PROJECT_ID/eu.gcr.io/prod/crm-backend:$SHORT_SHA', '.' ]
 
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'europe-docker.pkg.dev/$PROJECT_ID/eu.gcr.io/crm-backend:$SHORT_SHA' ]
+    args: [ 'push', 'europe-docker.pkg.dev/$PROJECT_ID/eu.gcr.io/prod/crm-backend:$SHORT_SHA' ]
 
   # Deploy container image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     args: [ 'run', 'deploy', 'crm-backend',
-            '--image', 'europe-docker.pkg.dev/$PROJECT_ID/eu.gcr.io/crm-backend:$SHORT_SHA',
+            '--image', 'europe-docker.pkg.dev/$PROJECT_ID/eu.gcr.io/prod/crm-backend:$SHORT_SHA',
             '--region', 'europe-west3',
             '--min-instances', '0',
             '--max-instances', 'default',
@@ -26,6 +26,6 @@ steps:
     ]
 
 images:
-  - europe-docker.pkg.dev/$PROJECT_ID/eu.gcr.io/stage/crm-backend:$SHORT_SHA
+  - europe-docker.pkg.dev/$PROJECT_ID/eu.gcr.io/prod/crm-backend:$SHORT_SHA
 options:
   logging: CLOUD_LOGGING_ONLY
