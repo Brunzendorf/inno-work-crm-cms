@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  inno-work-backend:
+    build:
+      target: build
+    command: sh -c "npm i -q && npm run build && npm run develop"
+    environment:
+      VIRTUAL_PORT: 8055
+      PORT: 8055
+      NODE_ENV: development
+      HTTPS_METHOD: noredirect
+      EXTENSIONS_AUTO_RELOAD: true
+      #enable Marketplace in dev mode
+      EXTENSIONS_LIMIT: 99
+
+networks:
+  default:
+    external: true
+    name: nginx-proxy
