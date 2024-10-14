@@ -22,7 +22,7 @@ steps:
             '--cpu-throttling',
             '--port', '8080',
             '--env-vars-file', 'gcloud_build/stage_env.yml',
-            '--set-secrets', '^|^DB_PASSWORD=STAGE__CRM_DATABASE_PASSWORD:latest|STORAGE_GCS_CREDENTIALS=STAGE__CRM_STORAGE_PASSWORD:latest'
+            '--set-secrets', '^|^DB_PASSWORD=STAGE__CRM_DATABASE_PASSWORD:latest|STORAGE_GCS_CREDENTIALS=STAGE__CRM_STORAGE_PASSWORD:latest|SECRET=STAGE__CRM_SECRET:latest'
     ]
 
 images:

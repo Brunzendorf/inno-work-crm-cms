@@ -1,6 +1,5 @@
 NODE_ENV: production
 #EXTENSIONS_LIMIT: '0' # Prohibit new installation of extensions in production
-SECRET: fc37ec84-2ef2-4491-9306-b2424010b1b7
 ADMIN_EMAIL: 'cbrunzendorf@next-inno.de'
 PUBLIC_URL: https://crm-backend.next-inno.de
 
