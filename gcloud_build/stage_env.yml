@@ -1,0 +1,23 @@
+NODE_ENV: production
+#EXTENSIONS_LIMIT: '0' # Prohibit new installation of extensions in production
+SECRET: fc37ec84-2ef2-4491-9306-b2424010b1b7
+ADMIN_EMAIL: 'cbrunzendorf@next-inno.de'
+PUBLIC_URL: https://crm-backend.next-inno.de
+
+### Database
+DB_CLIENT: pg
+DB_HOST: innowork-427110:europe-west3:inno-work-db
+DB_PORT: '5432'
+DB_DATABASE: inno-work-crm
+DB_USER: ssg_admin
+
+### Storage
+STORAGE_LOCATIONS: gcs
+STORAGE_GCS_DRIVER: gcs
+STORAGE_GCS_BUCKET: inno-work-crm-bucket
+
+### Cache
+#CACHE_ENABLED: "true"
+#CACHE_AUTO_PURGE: "true"
+#CACHE_STORE: "redis"
+#REDIS: "redis://cache:6379"
