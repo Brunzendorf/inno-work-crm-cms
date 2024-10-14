@@ -27,3 +27,5 @@ steps:
 
 images:
   - europe-docker.pkg.dev/$PROJECT_ID/eu.gcr.io/stage/crm-backend:$SHORT_SHA
+options:
+  logging: CLOUD_LOGGING_ONLY
