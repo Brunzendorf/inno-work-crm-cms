@@ -5,6 +5,9 @@ PUBLIC_URL: https://stage.next-inno.de/
 CORS_ENABLED: 'true'
 CORS_ORIGIN: 'true'
 
+### PRESSURE LIMITER
+PRESSURE_LIMITER_ENABLED: 'false'
+
 ### Database
 DB_CLIENT: pg
 DB_HOST: /cloudsql/innowork-427110:europe-west3:inno-work-db
