@@ -11,9 +11,10 @@ DB_DATABASE: inno-work-crm
 DB_USER: ssg_admin
 
 ### Storage
-STORAGE_LOCATIONS: gcs
-STORAGE_GCS_DRIVER: gcs
-STORAGE_GCS_BUCKET: inno-work-crm-bucket
+STORAGE_LOCATIONS: local
+STORAGE_LOCAL_DRIVER: local
+STORAGE_LOCAL_ROOT: './uploads'
+EXTENSIONS_PATH: './extensions'
 
 ### Cache
 #CACHE_ENABLED: "true"
