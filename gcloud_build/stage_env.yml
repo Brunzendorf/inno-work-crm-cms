@@ -1,7 +1,9 @@
 NODE_ENV: production
 #EXTENSIONS_LIMIT: '0' # Prohibit new installation of extensions in production
 ADMIN_EMAIL: 'cbrunzendorf@next-inno.de'
-PUBLIC_URL: https://crm-backend.next-inno.de
+PUBLIC_URL: https://stage.next-inno.de/
+CORS_ENABLED: 'true'
+CORS_ORIGIN: 'true'
 
 ### Database
 DB_CLIENT: pg
@@ -14,7 +16,6 @@ DB_USER: ssg_admin
 STORAGE_LOCATIONS: local
 STORAGE_LOCAL_DRIVER: local
 STORAGE_LOCAL_ROOT: './uploads'
-EXTENSIONS_PATH: './extensions'
 
 ### Cache
 #CACHE_ENABLED: "true"
