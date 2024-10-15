@@ -21,7 +21,7 @@ steps:
             '--allow-unauthenticated',
             '--cpu-throttling',
             '--port', '8080',
-            '--add-volume name', 'CRM-Backend-Volume', 'cloud-storage', 'inno-work-crm-bucket',
+            '--add-volume', 'CRM-Backend-Volume', 'cloud-storage', 'inno-work-crm-bucket',
             '--add-volume-mount', 'CRM-Backend-Volume', '/directus/uploads',
             '--set-cloudsql-instances', 'innowork-427110:europe-west3:inno-work-db',
             '--env-vars-file', 'gcloud_build/stage_env.yml',
