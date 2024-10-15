@@ -21,14 +21,17 @@ steps:
             '--allow-unauthenticated',
             '--cpu-throttling',
             '--port', '8080',
-            '--add-volume', 'CRM-Backend-Volume', 'cloud-storage', 'inno-work-crm-bucket',
-            '--add-volume-mount', 'CRM-Backend-Volume', '/directus/uploads',
+#            '--add-volume', 'CRM-Backend-Volume', 'cloud-storage', 'inno-work-crm-bucket',
+#            '--add-volume-mount', 'CRM-Backend-Volume', '/directus/uploads',
             '--set-cloudsql-instances', 'innowork-427110:europe-west3:inno-work-db',
             '--env-vars-file', 'gcloud_build/stage_env.yml',
             '--set-secrets', '^|^DB_PASSWORD=STAGE__CRM_DATABASE_PASSWORD:latest|
             STORAGE_GCS_CREDENTIALS=STAGE__CRM_STORAGE_PASSWORD:latest|
             SECRET=STAGE__CRM_SECRET:latest'
     ]
+    volumes:
+      - name: 'CRM-Backend-Volume'
+        path: '/directus/uploads'
 
 images:
   - europe-docker.pkg.dev/$PROJECT_ID/eu.gcr.io/prod/crm-backend:$SHORT_SHA
