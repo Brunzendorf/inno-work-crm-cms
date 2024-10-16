@@ -1,5 +1,5 @@
 version: 1
-directus: 11.1.0
+directus: 11.1.1
 vendor: postgres
 collections:
   - collection: CRM
@@ -479,13 +479,61 @@ collections:
       note: null
       preview_url: null
       singleton: false
-      sort: 1
+      sort: 3
       sort_field: null
       translations: null
       unarchive_value: null
       versioning: false
     schema:
       name: company_apps
+  - collection: company_employees
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: company_employees
+      color: null
+      display_template: null
+      group: company
+      hidden: false
+      icon: import_export
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 1
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: company_employees
+  - collection: company_owner
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: company_owner
+      color: null
+      display_template: null
+      group: company
+      hidden: false
+      icon: import_export
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 2
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: company_owner
   - collection: company_structure
     meta:
       accountability: all
@@ -763,7 +811,7 @@ collections:
       note: null
       preview_url: null
       singleton: false
-      sort: 2
+      sort: 4
       sort_field: null
       translations: null
       unarchive_value: null
@@ -924,16 +972,16 @@ collections:
       hidden: false
       icon: null
       item_duplication_fields:
-        - apps
-        - constructionDate
-        - externalId
+        - scheduledInspection.inspection
+        - scheduledInspection.app
+        - scheduledInspection.issueDate
+        - scheduledInspection.dueDate
         - name
+        - externalId
+        - apps
         - owner
         - rightfulOwner
-        - scheduledInspection.app
-        - scheduledInspection.dueDate
-        - scheduledInspection.inspection
-        - scheduledInspection.issueDate
+        - constructionDate
       note: null
       preview_url: null
       singleton: false
@@ -979,7 +1027,7 @@ collections:
       color: null
       display_template: null
       group: object
-      hidden: true
+      hidden: false
       icon: import_export
       item_duplication_fields: null
       note: null
@@ -1170,13 +1218,13 @@ collections:
       hidden: false
       icon: null
       item_duplication_fields:
-        - app
-        - dueDate
-        - inspection.app
-        - inspection.name
-        - inspection.planningCycle
         - issueDate
+        - dueDate
+        - app
         - object
+        - inspection.name
+        - inspection.app
+        - inspection.planningCycle
       note: null
       preview_url: null
       singleton: false
@@ -1492,19 +1540,19 @@ fields:
       collection: block_cardgroup
       conditions:
         - name: Hide Field on Detail
+          options:
+            allowDuplicates: false
+            enableCreate: true
+            enableLink: false
+            enableSearchFilter: false
+            enableSelect: true
+            junctionFieldLocation: bottom
+            layout: list
+            limit: 15
           rule:
             _and:
               - groupType:
                   _neq: CUSTOM
-          options:
-            layout: list
-            enableCreate: true
-            enableSelect: true
-            limit: 15
-            junctionFieldLocation: bottom
-            allowDuplicates: false
-            enableSearchFilter: false
-            enableLink: false
       display: null
       display_options: null
       field: posts
@@ -1943,25 +1991,22 @@ fields:
       options:
         fields:
           - field: label
-            name: label
-            type: string
             meta:
               field: label
-              type: string
               interface: input
-          - field: href
-            name: href
+              type: string
+            name: label
             type: string
+          - field: href
             meta:
               field: href
-              type: string
               interface: input
-          - field: variant
-            name: variant
+              type: string
+            name: href
             type: string
+          - field: variant
             meta:
               field: variant
-              type: string
               interface: select-dropdown
               options:
                 choices:
@@ -1971,6 +2016,9 @@ fields:
                     value: SECONDARY
                   - text: tertiary
                     value: TERTIARY
+              type: string
+            name: variant
+            type: string
       readonly: false
       required: false
       sort: 9
@@ -2865,7 +2913,7 @@ fields:
         template: '{{first_name}}{{last_name}}'
       readonly: false
       required: false
-      sort: 4
+      sort: 6
       special:
         - m2o
       translations: null
@@ -3241,21 +3289,21 @@ fields:
       display: labels
       display_options:
         choices:
-          - text: Published
-            value: published
+          - background: var(--theme--primary-background)
             color: var(--theme--primary)
             foreground: var(--theme--primary)
-            background: var(--theme--primary-background)
-          - text: Draft
-            value: draft
+            text: Published
+            value: published
+          - background: var(--theme--background-normal)
             color: var(--theme--foreground)
             foreground: var(--theme--foreground)
-            background: var(--theme--background-normal)
-          - text: Archived
-            value: archived
+            text: Draft
+            value: draft
+          - background: var(--theme--warning-background)
             color: var(--theme--warning)
             foreground: var(--theme--warning)
-            background: var(--theme--warning-background)
+            text: Archived
+            value: archived
         showAsDot: true
       field: status
       group: null
@@ -3264,15 +3312,15 @@ fields:
       note: null
       options:
         choices:
-          - text: Published
+          - color: var(--theme--primary)
+            text: Published
             value: published
-            color: var(--theme--primary)
-          - text: Draft
+          - color: var(--theme--foreground)
+            text: Draft
             value: draft
-            color: var(--theme--foreground)
-          - text: Archived
+          - color: var(--theme--warning)
+            text: Archived
             value: archived
-            color: var(--theme--warning)
       readonly: false
       required: false
       sort: 23
@@ -3458,31 +3506,6 @@ fields:
       foreign_key_table: null
       foreign_key_column: null
   - collection: company
-    field: employees
-    type: alias
-    meta:
-      collection: company
-      conditions: null
-      display: related-values
-      display_options:
-        template: '{{email}}'
-      field: employees
-      group: null
-      hidden: false
-      interface: list-o2m
-      note: null
-      options:
-        template: '{{email}}'
-      readonly: false
-      required: false
-      sort: 5
-      special:
-        - o2m
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-  - collection: company
     field: subCompanies
     type: alias
     meta:
@@ -3581,31 +3604,6 @@ fields:
       validation: null
       validation_message: null
       width: full
-  - collection: company
-    field: owner
-    type: alias
-    meta:
-      collection: company
-      conditions: null
-      display: related-values
-      display_options:
-        template: '{{email}}'
-      field: owner
-      group: null
-      hidden: false
-      interface: list-o2m
-      note: null
-      options:
-        template: '{{email}}'
-      readonly: false
-      required: true
-      sort: 6
-      special:
-        - o2m
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
   - collection: company
     field: phone
     type: string
@@ -3866,6 +3864,52 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
+  - collection: company
+    field: owners
+    type: alias
+    meta:
+      collection: company
+      conditions: null
+      display: null
+      display_options: null
+      field: owners
+      group: null
+      hidden: false
+      interface: list-m2m
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 4
+      special:
+        - m2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+  - collection: company
+    field: employees
+    type: alias
+    meta:
+      collection: company
+      conditions: null
+      display: null
+      display_options: null
+      field: employees
+      group: null
+      hidden: false
+      interface: list-m2m
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 5
+      special:
+        - m2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
   - collection: company_apps
     field: id
     type: integer
@@ -3876,7 +3920,7 @@ fields:
       display_options: null
       field: id
       group: null
-      hidden: true
+      hidden: false
       interface: null
       note: null
       options: null
@@ -3914,7 +3958,7 @@ fields:
       display_options: null
       field: appOwnerId
       group: null
-      hidden: true
+      hidden: false
       interface: null
       note: null
       options: null
@@ -3952,7 +3996,7 @@ fields:
       display_options: null
       field: item
       group: null
-      hidden: true
+      hidden: false
       interface: null
       note: null
       options: null
@@ -3990,7 +4034,7 @@ fields:
       display_options: null
       field: collection
       group: null
-      hidden: true
+      hidden: false
       interface: null
       note: null
       options: null
@@ -4018,6 +4062,234 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
+  - collection: company_employees
+    field: id
+    type: integer
+    meta:
+      collection: company_employees
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: false
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: company_employees
+      data_type: integer
+      default_value: nextval('company_employees_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: company_employees
+    field: company_id
+    type: integer
+    meta:
+      collection: company_employees
+      conditions: null
+      display: null
+      display_options: null
+      field: company_id
+      group: null
+      hidden: false
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: company_id
+      table: company_employees
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: company
+      foreign_key_column: id
+  - collection: company_employees
+    field: employee_id
+    type: uuid
+    meta:
+      collection: company_employees
+      conditions: null
+      display: null
+      display_options: null
+      field: employee_id
+      group: null
+      hidden: false
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: employee_id
+      table: company_employees
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: company_owner
+    field: id
+    type: integer
+    meta:
+      collection: company_owner
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: false
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: company_owner
+      data_type: integer
+      default_value: nextval('company_owner_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: company_owner
+    field: company_id
+    type: integer
+    meta:
+      collection: company_owner
+      conditions: null
+      display: null
+      display_options: null
+      field: company_id
+      group: null
+      hidden: false
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: company_id
+      table: company_owner
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: company
+      foreign_key_column: id
+  - collection: company_owner
+    field: owner_id
+    type: uuid
+    meta:
+      collection: company_owner
+      conditions: null
+      display: null
+      display_options: null
+      field: owner_id
+      group: null
+      hidden: false
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: owner_id
+      table: company_owner
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
   - collection: components_block_about_hero
     field: id
     type: integer
@@ -4151,13 +4423,13 @@ fields:
       options:
         fields:
           - field: content
+            meta:
+              display: collection
+              field: content
+              interface: input
+              type: string
             name: content
             type: string
-            meta:
-              field: content
-              type: string
-              interface: input
-              display: collection
       readonly: false
       required: false
       sort: 5
@@ -5600,7 +5872,7 @@ fields:
       display_options: null
       field: id
       group: null
-      hidden: true
+      hidden: false
       interface: null
       note: null
       options: null
@@ -5638,7 +5910,7 @@ fields:
       display_options: null
       field: supplier_id
       group: null
-      hidden: true
+      hidden: false
       interface: null
       note: null
       options: null
@@ -5676,7 +5948,7 @@ fields:
       display_options: null
       field: customer_id
       group: null
-      hidden: true
+      hidden: false
       interface: null
       note: null
       options: null
@@ -5705,83 +5977,51 @@ fields:
       foreign_key_table: company
       foreign_key_column: id
   - collection: directus_users
-    field: company
-    type: integer
+    field: companies
+    type: alias
     meta:
       collection: directus_users
       conditions: null
       display: null
       display_options: null
-      field: company
+      field: companies
       group: null
       hidden: false
-      interface: select-dropdown-m2o
-      note: null
-      options:
-        template: '{{name}}'
-      readonly: false
-      required: false
-      sort: 1
-      special:
-        - m2o
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: company
-      table: directus_users
-      data_type: integer
-      default_value: null
-      max_length: null
-      numeric_precision: 32
-      numeric_scale: 0
-      is_nullable: true
-      is_unique: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: company
-      foreign_key_column: id
-  - collection: directus_users
-    field: ownerOfCompany
-    type: integer
-    meta:
-      collection: directus_users
-      conditions: null
-      display: null
-      display_options: null
-      field: ownerOfCompany
-      group: null
-      hidden: true
-      interface: select-dropdown-m2o
+      interface: list-m2m
       note: null
       options: null
       readonly: false
       required: false
-      sort: 2
-      special: null
+      sort: 3
+      special:
+        - m2m
       translations: null
       validation: null
       validation_message: null
       width: full
-    schema:
-      name: ownerOfCompany
-      table: directus_users
-      data_type: integer
-      default_value: null
-      max_length: null
-      numeric_precision: 32
-      numeric_scale: 0
-      is_nullable: true
-      is_unique: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: company
-      foreign_key_column: id
+  - collection: directus_users
+    field: employeeOfCompany
+    type: alias
+    meta:
+      collection: directus_users
+      conditions: null
+      display: null
+      display_options: null
+      field: employeeOfCompany
+      group: null
+      hidden: false
+      interface: list-m2m
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 4
+      special:
+        - m2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
   - collection: inspection
     field: id
     type: integer
@@ -7623,7 +7863,7 @@ fields:
       display_options: null
       field: id
       group: null
-      hidden: true
+      hidden: false
       interface: null
       note: null
       options: null
@@ -7661,7 +7901,7 @@ fields:
       display_options: null
       field: object_id
       group: null
-      hidden: true
+      hidden: false
       interface: null
       note: null
       options: null
@@ -7699,7 +7939,7 @@ fields:
       display_options: null
       field: directus_files_id
       group: null
-      hidden: true
+      hidden: false
       interface: null
       note: null
       options: null
@@ -7774,21 +8014,21 @@ fields:
       display: labels
       display_options:
         choices:
-          - text: $t:published
-            value: published
+          - background: var(--theme--primary-background)
             color: var(--theme--primary)
             foreground: var(--theme--primary)
-            background: var(--theme--primary-background)
-          - text: $t:draft
-            value: draft
+            text: $t:published
+            value: published
+          - background: var(--theme--background-normal)
             color: var(--theme--foreground)
             foreground: var(--theme--foreground)
-            background: var(--theme--background-normal)
-          - text: $t:archived
-            value: archived
+            text: $t:draft
+            value: draft
+          - background: var(--theme--warning-background)
             color: var(--theme--warning)
             foreground: var(--theme--warning)
-            background: var(--theme--warning-background)
+            text: $t:archived
+            value: archived
         showAsDot: true
       field: status
       group: null
@@ -7797,15 +8037,15 @@ fields:
       note: null
       options:
         choices:
-          - text: $t:published
+          - color: var(--theme--primary)
+            text: $t:published
             value: published
-            color: var(--theme--primary)
-          - text: $t:draft
+          - color: var(--theme--foreground)
+            text: $t:draft
             value: draft
-            color: var(--theme--foreground)
-          - text: $t:archived
+          - color: var(--theme--warning)
+            text: $t:archived
             value: archived
-            color: var(--theme--warning)
       readonly: false
       required: false
       sort: 2
@@ -8744,21 +8984,21 @@ fields:
       display: labels
       display_options:
         choices:
-          - text: $t:published
-            value: published
+          - background: var(--theme--primary-background)
             color: var(--theme--primary)
             foreground: var(--theme--primary)
-            background: var(--theme--primary-background)
-          - text: $t:draft
-            value: draft
+            text: $t:published
+            value: published
+          - background: var(--theme--background-normal)
             color: var(--theme--foreground)
             foreground: var(--theme--foreground)
-            background: var(--theme--background-normal)
-          - text: $t:archived
-            value: archived
+            text: $t:draft
+            value: draft
+          - background: var(--theme--warning-background)
             color: var(--theme--warning)
             foreground: var(--theme--warning)
-            background: var(--theme--warning-background)
+            text: $t:archived
+            value: archived
         showAsDot: true
       field: status
       group: null
@@ -8767,15 +9007,15 @@ fields:
       note: null
       options:
         choices:
-          - text: $t:published
+          - color: var(--theme--primary)
+            text: $t:published
             value: published
-            color: var(--theme--primary)
-          - text: $t:draft
+          - color: var(--theme--foreground)
+            text: $t:draft
             value: draft
-            color: var(--theme--foreground)
-          - text: $t:archived
+          - color: var(--theme--warning)
+            text: $t:archived
             value: archived
-            color: var(--theme--warning)
       readonly: false
       required: false
       sort: 2
@@ -10952,7 +11192,7 @@ relations:
       foreign_key_column: id
       constraint_name: company_user_updated_foreign
       on_update: NO ACTION
-      on_delete: NO ACTION
+      on_delete: SET DEFAULT
   - collection: company
     field: user_created
     related_collection: directus_users
@@ -10973,7 +11213,7 @@ relations:
       foreign_key_column: id
       constraint_name: company_user_created_foreign
       on_update: NO ACTION
-      on_delete: NO ACTION
+      on_delete: SET DEFAULT
   - collection: company
     field: logo
     related_collection: directus_files
@@ -11052,6 +11292,90 @@ relations:
       foreign_key_table: company
       foreign_key_column: id
       constraint_name: company_apps_appownerid_foreign
+      on_update: NO ACTION
+      on_delete: CASCADE
+  - collection: company_employees
+    field: employee_id
+    related_collection: directus_users
+    meta:
+      junction_field: company_id
+      many_collection: company_employees
+      many_field: employee_id
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: delete
+      one_field: employeeOfCompany
+      sort_field: null
+    schema:
+      table: company_employees
+      column: employee_id
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: company_employees_employee_id_foreign
+      on_update: NO ACTION
+      on_delete: CASCADE
+  - collection: company_employees
+    field: company_id
+    related_collection: company
+    meta:
+      junction_field: employee_id
+      many_collection: company_employees
+      many_field: company_id
+      one_allowed_collections: null
+      one_collection: company
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: employees
+      sort_field: null
+    schema:
+      table: company_employees
+      column: company_id
+      foreign_key_table: company
+      foreign_key_column: id
+      constraint_name: company_employees_company_id_foreign
+      on_update: NO ACTION
+      on_delete: CASCADE
+  - collection: company_owner
+    field: owner_id
+    related_collection: directus_users
+    meta:
+      junction_field: company_id
+      many_collection: company_owner
+      many_field: owner_id
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: delete
+      one_field: companies
+      sort_field: null
+    schema:
+      table: company_owner
+      column: owner_id
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: company_owner_owner_id_foreign
+      on_update: NO ACTION
+      on_delete: CASCADE
+  - collection: company_owner
+    field: company_id
+    related_collection: company
+    meta:
+      junction_field: owner_id
+      many_collection: company_owner
+      many_field: company_id
+      one_allowed_collections: null
+      one_collection: company
+      one_collection_field: null
+      one_deselect_action: delete
+      one_field: owners
+      sort_field: null
+    schema:
+      table: company_owner
+      column: company_id
+      foreign_key_table: company
+      foreign_key_column: id
+      constraint_name: company_owner_company_id_foreign
       on_update: NO ACTION
       on_delete: CASCADE
   - collection: components_block_about_hero
@@ -11285,48 +11609,6 @@ relations:
       constraint_name: customer_supplier_supplier_id_foreign
       on_update: NO ACTION
       on_delete: CASCADE
-  - collection: directus_users
-    field: company
-    related_collection: company
-    meta:
-      junction_field: null
-      many_collection: directus_users
-      many_field: company
-      one_allowed_collections: null
-      one_collection: company
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: employees
-      sort_field: null
-    schema:
-      table: directus_users
-      column: company
-      foreign_key_table: company
-      foreign_key_column: id
-      constraint_name: directus_users_company_foreign
-      on_update: NO ACTION
-      on_delete: SET NULL
-  - collection: directus_users
-    field: ownerOfCompany
-    related_collection: company
-    meta:
-      junction_field: null
-      many_collection: directus_users
-      many_field: ownerOfCompany
-      one_allowed_collections: null
-      one_collection: company
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: owner
-      sort_field: null
-    schema:
-      table: directus_users
-      column: ownerOfCompany
-      foreign_key_table: company
-      foreign_key_column: id
-      constraint_name: directus_users_ownerofcompany_foreign
-      on_update: NO ACTION
-      on_delete: SET NULL
   - collection: inspection
     field: user_created
     related_collection: directus_users
@@ -11431,7 +11713,7 @@ relations:
       foreign_key_column: id
       constraint_name: maintenanceapp_user_created_foreign
       on_update: NO ACTION
-      on_delete: NO ACTION
+      on_delete: SET DEFAULT
   - collection: maintenanceApp
     field: user_updated
     related_collection: directus_users
@@ -11452,7 +11734,7 @@ relations:
       foreign_key_column: id
       constraint_name: maintenanceapp_user_updated_foreign
       on_update: NO ACTION
-      on_delete: NO ACTION
+      on_delete: SET DEFAULT
   - collection: maintenanceApp
     field: owner
     related_collection: company
@@ -11557,7 +11839,7 @@ relations:
       foreign_key_column: id
       constraint_name: object_user_created_foreign
       on_update: NO ACTION
-      on_delete: NO ACTION
+      on_delete: SET DEFAULT
   - collection: object
     field: user_updated
     related_collection: directus_users
@@ -11578,7 +11860,7 @@ relations:
       foreign_key_column: id
       constraint_name: object_user_updated_foreign
       on_update: NO ACTION
-      on_delete: NO ACTION
+      on_delete: SET DEFAULT
   - collection: object
     field: owner
     related_collection: company
@@ -11770,8 +12052,8 @@ relations:
       many_field: item
       one_allowed_collections:
         - block_cardgroup
-        - block_hero
         - block_richtext
+        - block_hero
       one_collection: null
       one_collection_field: collection
       one_deselect_action: nullify
@@ -11818,7 +12100,7 @@ relations:
       foreign_key_column: id
       constraint_name: planningcycle_user_updated_foreign
       on_update: NO ACTION
-      on_delete: NO ACTION
+      on_delete: SET DEFAULT
   - collection: planningCycle
     field: user_created
     related_collection: directus_users
@@ -11839,7 +12121,7 @@ relations:
       foreign_key_column: id
       constraint_name: planningcycle_user_created_foreign
       on_update: NO ACTION
-      on_delete: NO ACTION
+      on_delete: SET DEFAULT
   - collection: posts
     field: user_updated
     related_collection: directus_users
@@ -11944,7 +12226,7 @@ relations:
       foreign_key_column: id
       constraint_name: schedule_user_created_foreign
       on_update: NO ACTION
-      on_delete: NO ACTION
+      on_delete: SET DEFAULT
   - collection: schedule
     field: user_updated
     related_collection: directus_users
@@ -11965,7 +12247,7 @@ relations:
       foreign_key_column: id
       constraint_name: schedule_user_updated_foreign
       on_update: NO ACTION
-      on_delete: NO ACTION
+      on_delete: SET DEFAULT
   - collection: schedule
     field: object
     related_collection: object
